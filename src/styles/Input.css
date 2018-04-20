@@ -1,0 +1,24 @@
+
+
+.inputArea {
+  margin-top: 35%;
+  text-shadow: 2px 2px 4px gray;
+}
+
+.inputArea input {
+  box-shadow: 2px 2px 2px gray;
+  display: block;
+  margin: auto;
+  margin-bottom: 10px;
+  width: 50%;
+}
+
+.inputArea button {
+  border-radius: 0px;
+  width: 15%;
+  height: 30px;
+}
+
+.inputArea button:hover {
+  background-color: darkgray;
+}
