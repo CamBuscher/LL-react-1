@@ -14,9 +14,15 @@ class App extends Component {
 
   addCard = (ID, Title, Body) => {
     let newIdea = {
-      ID: ID,
-      Title: Title,
-      Body
+      ID,
+      Title,
+      Body,
+      qualityCount: 0,
+      qualities: [
+        'swill',
+        'less shitty',
+        'pretty good'
+      ]
     }
 
     localStorage.setItem(ID, JSON.stringify(newIdea))
@@ -26,9 +32,7 @@ class App extends Component {
     })
   }
 
-  deleteCard = (ID) => {
-    localStorage.removeItem(ID)
-    
+  matchStorage() {
     let storageKeys = Object.keys(localStorage)
     let storedIdeas = []
     storageKeys.forEach(key => {
@@ -42,18 +46,34 @@ class App extends Component {
     })
   }
 
-  componentDidMount() {
-    let storageKeys = Object.keys(localStorage)
-    let storedIdeas = []
-    storageKeys.forEach(key => {
-      let stored = localStorage.getItem(key)
-      let parsed = JSON.parse(stored)
-      storedIdeas.push(parsed)
-    })
-
+  deleteCard = (ID) => {
+    localStorage.removeItem(ID)
+    
     this.setState({
-      ideas: storedIdeas
+      ideas: this.state.ideas.filter(obj => obj.ID !== ID)
     })
+  }
+
+  upvoteIdea = (ID) => {
+    let updatedIdea = this.state.ideas.find(idea => idea.ID === ID)
+    if(updatedIdea.qualityCount < 2) {
+      updatedIdea.qualityCount++
+
+      localStorage.setItem(ID, JSON.stringify(updatedIdea))
+    }
+  }
+
+  downvoteIdea = (ID) => {
+    let updatedIdea = this.state.ideas.find(idea => idea.ID === ID)
+    if (updatedIdea.qualityCount > 0) {
+      updatedIdea.qualityCount--
+
+      localStorage.setItem(ID, JSON.stringify(updatedIdea))
+    }
+  }
+
+  componentDidMount() {
+    this.matchStorage()
   }
 
   render() {
@@ -66,6 +86,8 @@ class App extends Component {
         <CardDisplay 
           ideas={this.state.ideas}
           deleteCard={this.deleteCard}
+          upvoteIdea={this.upvoteIdea}
+          downvoteIdea={this.downvoteIdea}
         />
       </div>
     );
